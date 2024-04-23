@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const User = require('../Schema/User_modal');
+const User = require('../Schema/user_modal');
 
 //moduleScaffolding
 const usersController = {};

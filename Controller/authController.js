@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const Registration = require("../Schema/registration_modal");
-const User = require("../Schema/User_modal");
+const User = require("../Schema/user_modal");
 
 // moduleScaffolding
 const authController = {};
