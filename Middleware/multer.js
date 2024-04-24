@@ -3,8 +3,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log('req: ', req);
-    cb(null, "./public/temp");
+    cb(null, path.join(process.cwd(), "/public/temp"));
   },
   filename: function (req, file, cb) {
     console.log('file', file);
@@ -21,7 +20,6 @@ const upload = multer({
         fileSize: 5000000
     },
     fileFilter: (req, file, cb) => {
-        console.log('req 2: ', req);
         if(file.mimetype === "image/jpg" || file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
             cb(null, true);
         } else {

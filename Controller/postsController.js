@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const Post = require("../Schema/post_modal");
 const uploadOnCloudinary = require("../Utility/cloudinary");
+const fs = require("fs");
 
 //module scaffolding
 const postsController = {};
@@ -23,7 +24,9 @@ postsController.createPost = async (req, res) => {
       });
       
       await createPost.save();
-  
+      //remove local file after upload to cloudinary
+      fs.unlinkSync(localFilePath);
+      
       res.status(200).json({
         message: "Post create successfully",
       });
@@ -122,11 +125,10 @@ postsController.deletePostById = async (req, res) => {
 
 postsController.fileUpload = async (req, res) => {
   const localFilePath = req?.file?.path;
-  console.log(req.body.post);
-  // const result = await uploadOnCloudinary(localFilePath);
-  let result = null;
+  const result = await uploadOnCloudinary(localFilePath);
   if (result) {
-    console.log(result);
+    fs.unlinkSync(localFilePath);
+
     res.status(200).json({
       message: "File upload successfully",
     });
