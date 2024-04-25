@@ -21,7 +21,7 @@ route.get('/getProfile', accessValidation, userController.getProfile);
 //                                <== PRIVATE Route ==>
 
 //add new student
-route.post('/updateProfile', accessValidation, userController.addNewUser);
+route.post('/updateProfile', accessValidation, userController.updateUserProfile);
 
 //update multiple status(bulk action)
 // route.put('/updateStatus/action', accessValidation, verifyRoles(Admin), studentController.updateMultipleStatus);

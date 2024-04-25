@@ -1,20 +1,20 @@
-const { ObjectId } = require('mongodb');
-const User = require('../Schema/user_modal');
+const { ObjectId } = require("mongodb");
+const User = require("../Schema/user_modal");
 
 //moduleScaffolding
 const usersController = {};
 
 //get profile data
-usersController.getProfile = async (req, res) => { 
-    try{
-        const userProfile = await User.where({ email: req?.userEmail }).findOne();
-        console.log(userProfile);
-        res.status(200).json(userProfile);
-    }catch(err){
-        res.status(500).json({
-            error: 'data fetch failed'
-        });
-    }
+usersController.getProfile = async (req, res) => {
+  try {
+    const userProfile = await User.where({ email: req?.userEmail }).findOne();
+    console.log(userProfile);
+    res.status(200).json(userProfile);
+  } catch (err) {
+    res.status(500).json({
+      error: "data fetch failed",
+    });
+  }
 };
 
 // //load student data by roll
@@ -47,21 +47,21 @@ usersController.getProfile = async (req, res) => {
 // }
 
 //add a new student
-usersController.addNewUser = async (req, res) => {
-    try{
-        const { firstName, lastName, birthDate } = req.body;
+usersController.updateUserProfile = async (req, res) => {
+  try {
+    const { firstName, lastName, birthDate } = req.body;
 
-        const updateUserProfile = await User.findOneAndUpdate({ email: req?.userEmail }, { firstName, lastName, birthDate });
+    await User.findOneAndUpdate({ email: req?.userEmail }, { firstName, lastName, birthDate });
 
-        res.status(200).json({
-            message: 'Profile update successfully'
-        })
-    }catch(e){
-        res.status(500).json({
-            error: 'Profile update failed'
-        })
-    }
-}
+    res.status(200).json({
+      message: "Profile update successfully",
+    });
+  } catch (e) {
+    res.status(500).json({
+      error: "Profile update failed"
+    });
+  }
+};
 
 // usersController.
 // updateStudentInfoByID = (req, res) => {
@@ -84,9 +84,9 @@ usersController.addNewUser = async (req, res) => {
 //     try{
 //         let query = {_id: ObjectId(req.params.id)};
 //         let result = await students.deleteOne(query);
-        
+
 //         res.status(200).json(result);
-        
+
 //     }catch{
 //         res.status(500).json({
 //             error: 'data delete Failed'
@@ -157,7 +157,7 @@ usersController.addNewUser = async (req, res) => {
 //             const {statusIDList} = req.body;
 //             const query = statusIDList.map(i => ObjectId(i));
 //             const result = await students.deleteMany({_id: {$in: query}});
-        
+
 //         res.status(200).json(result);
 //     } catch (error) {
 //         res.status(500).json({

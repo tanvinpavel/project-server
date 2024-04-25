@@ -21,11 +21,13 @@ route.get('/all/userId', accessValidation, postsController.getAllPostByUserId);
 // Create Post
 route.post('/create', accessValidation, upload.single("image"), postsController.createPost);
 
+route.post('/confirmPurchase', accessValidation, postsController.confirmPurchase);
+
 //update by id
 // route.put('/update/:id', accessValidation, verifyRoles(Admin, MealManager), mealController.updateMealById);
 
 //delete by id
-route.delete('/delete/:id', accessValidation, postsController.deletePostById);
+route.delete('/delete', accessValidation, postsController.deletePostById);
 
 //bulk action
 // route.delete('/deleteMany', accessValidation, verifyRoles(Admin, MealManager), mealController.deleteMany);

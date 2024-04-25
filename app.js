@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./Config/corsOptions");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 //route method
 const app = express();
@@ -13,7 +14,7 @@ app.use([express.json(), credentials, cors(corsOptions), cookieParser(process.en
 
 //connect to mongoose database
 mongoose
-  .connect("mongodb+srv://yoodaDB:12345@cluster0.zjops.mongodb.net/socialapp?retryWrites=true&w=majority")
+  .connect(process.env.MONGO_SECRET)
   .then(() => {
     //port variable
     const port = process.env.PORT || 4000;
@@ -26,12 +27,10 @@ mongoose
 
       const postsRoute = require("./Routes/postsRoute");
       const usersRoute = require("./Routes/usersRoute");
-    //   const mealDistributionRoute = require("./Routes/mealDistributionRoute");
       const authRoute = require("./Routes/authRoute");
 
       app.use("/post", postsRoute);
       app.use("/user", usersRoute);
-    //   app.use("/mealDist", mealDistributionRoute);
       app.use("/auth", authRoute);
     });
   })

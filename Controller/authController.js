@@ -13,30 +13,35 @@ authController.signup = async (req, res) => {
 
     let encryptPassword = null;
 
-    if(password) {
-        encryptPassword = await bcrypt.hash(password, 11);
+    if (email) {
+      const result = await Registration.findOne({ email });
+      console.log(result);
+      if (result) return res.status(409).json("Already have an account.");
+    }
+
+    if (password) {
+      encryptPassword = await bcrypt.hash(password, 11);
     }
     const accessToken = CreateAccessToken({ email });
 
     const createUser = new Registration({
-        name: name,
-        email: email,
-        password: encryptPassword
+      name: name,
+      email: email,
+      password: encryptPassword,
     });
 
     const newUser = await createUser.save();
-    
+
     const createUserProfile = new User({
-        firstName: name,
-        email: email,
-        lastName: "",
-        birthDate: ""
+      firstName: name,
+      email: email,
+      lastName: "",
+      birthDate: "",
     });
-    
-    const newProfile = await createUserProfile.save();
+
+    await createUserProfile.save();
 
     res.status(200).json({ name: newUser.name, email: newUser.email, accessToken });
-
   } catch (err) {
     //     console.log(err);
     res.status(500).json(err);

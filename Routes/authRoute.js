@@ -8,7 +8,5 @@ const authRoute = app.Router();
 
 authRoute.post('/signup', authController.signup);
 authRoute.post('/login', authController.login);
-// authRoute.delete('/logout', authController.logout);
-// authRoute.get('/getAccessToken', authController.newAccessToken);
 
 module.exports = authRoute;

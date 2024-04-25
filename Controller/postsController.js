@@ -1,6 +1,6 @@
 const { ObjectId } = require("mongodb");
 const Post = require("../Schema/post_modal");
-const uploadOnCloudinary = require("../Utility/cloudinary");
+const { uploadOnCloudinary, deleteFromCloudinary } = require("../Utility/cloudinary");
 const fs = require("fs");
 
 //module scaffolding
@@ -9,24 +9,27 @@ const postsController = {};
 //controllers
 postsController.createPost = async (req, res) => {
   try {
-    const { post, private } = req.body;
+    const { post, price, private } = req.body;
     console.log(req?.file?.path);
-    const localFilePath = req?.file?.path ?? './public/temp/default.jpg';
+    const localFilePath = req?.file?.path ?? "./public/temp/default.jpg";
 
     const result = await uploadOnCloudinary(localFilePath);
 
-    if(result) {
+    if (result) {
       const createPost = new Post({
         creator: req?.userEmail,
         image: result?.url,
+        publicId: result?.public_id,
         post: post,
+        price: price,
         private: private,
+        status: null,
       });
-      
+
       await createPost.save();
       //remove local file after upload to cloudinary
       fs.unlinkSync(localFilePath);
-      
+
       res.status(200).json({
         message: "Post create successfully",
       });
@@ -109,9 +112,14 @@ postsController.getAllPostByUserId = async (req, res) => {
 
 postsController.deletePostById = async (req, res) => {
   try {
-    const _id = req.params.id;
+    const _id = req.query.id;
+    const _publicId = req.query.publicId;
 
-    const result = await Post.findByIdAndDelete(_id);
+    const resultCludinary = await deleteFromCloudinary(_publicId);
+
+    if (resultCludinary?.result === "ok") {
+      await Post.findByIdAndDelete(_id);
+    }
 
     res.status(200).json({
       message: "Post delete successfully",
@@ -135,6 +143,21 @@ postsController.fileUpload = async (req, res) => {
   } else {
     res.status(500).json({
       error: "File upload failed",
+    });
+  }
+};
+
+postsController.confirmPurchase = async (req, res) => {
+  try {
+    console.log("req?.body?.postId", req?.body?.postId);
+    await Post.findOneAndUpdate({ _id: req?.body?.postId }, { status: "sold" }, { new: true });
+
+    res.status(200).json({
+      message: "Update successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Update failed",
     });
   }
 };
