@@ -1,15 +1,29 @@
+require("dotenv").config();
+
 const verifyRoles = (...allowRoles) => {
-    return (req, res, next) => {
-        if(!req?.roles) return res.sendStatus(401);
+  return (req, res, next) => {
+    const requestedUserRole = req.headers.role || req.headers.role;
+    if (!requestedUserRole)
+      return res.status(401).json({
+        error: "Access Denied",
+      });
 
-        const roles = [...allowRoles];
-        const userRoles = req.roles;
-        const hasAccess = userRoles.map(role => roles.includes(role)).find(val => val === true);
+    const rolesHasAccess = [...allowRoles];
 
-        if(!hasAccess) return res.sendStatus(401);
+    const hasAccess = rolesHasAccess.findIndex((role) => role === parseInt(requestedUserRole)) > -1 ? true : false;
 
-        next();
-    }
-}
+    if (!hasAccess)
+      return res.status(401).json({
+        error: "Access Denied",
+      });
+
+    if (req.userEmail !== process.env.ADMIN_USER_ID)
+      return res.status(401).json({
+        error: "Access Denied",
+      });
+
+    next();
+  };
+};
 
 module.exports = verifyRoles;

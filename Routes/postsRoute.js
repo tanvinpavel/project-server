@@ -3,6 +3,7 @@ const postsController = require("../Controller/postsController");
 const accessValidation = require("../Middleware/authMiddleware");
 const verifyRoles = require("../Middleware/verifyRoles");
 const upload = require("../Middleware/multer");
+const { Admin, User } = require("../Config/roleList");
 
 const route = express.Router();
 

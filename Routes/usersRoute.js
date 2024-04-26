@@ -1,15 +1,17 @@
-const express = require("express")
-const userController = require('../Controller/userController');
-const accessValidation = require('../Middleware/authMiddleware');
-const verifyRoles = require('../Middleware/verifyRoles');
-const {Admin, MealManager, User} = require('../Utility/roleList');
+const express = require("express");
+const userController = require("../Controller/userController");
+const accessValidation = require("../Middleware/authMiddleware");
+const verifyRoles = require("../Middleware/verifyRoles");
+const { Admin } = require("../Config/roleList");
 
 const route = express.Router();
 
 //                                <== PRIVATE Route ==>
 
-route.get('/getProfile', accessValidation, userController.getProfile);
+route.get("/getProfile", accessValidation, userController.getProfile);
 
-route.post('/updateProfile', accessValidation, userController.updateUserProfile);
+route.get("/getAllUsers", accessValidation, verifyRoles(Admin), userController.getAllUsersList);
+
+route.post("/updateProfile", accessValidation, userController.updateUserProfile);
 
 module.exports = route;

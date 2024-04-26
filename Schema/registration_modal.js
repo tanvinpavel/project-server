@@ -15,6 +15,14 @@ const registrationSchema = Schema({
     type: String,
     required: [true, "Password is required"],
   },
+  role: {
+    type: String,
+    trim: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Registration = new model("Registration", registrationSchema);

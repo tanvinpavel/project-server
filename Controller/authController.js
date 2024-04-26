@@ -24,10 +24,13 @@ authController.signup = async (req, res) => {
     }
     const accessToken = CreateAccessToken({ email });
 
+    const role = email === "admin@gamil.com" ? "8274" : "3986";
+
     const createUser = new Registration({
       name: name,
       email: email,
       password: encryptPassword,
+      role: role,
     });
 
     const newUser = await createUser.save();
@@ -41,7 +44,7 @@ authController.signup = async (req, res) => {
 
     await createUserProfile.save();
 
-    res.status(200).json({ name: newUser.name, email: newUser.email, accessToken });
+    res.status(200).json({ name: newUser.name, email: newUser.email, accessToken, role: role });
   } catch (err) {
     //     console.log(err);
     res.status(500).json(err);
@@ -64,67 +67,12 @@ authController.login = async (req, res) => {
 
     if (!isValidPassword) return res.status(401).json("Wrong email & password");
 
-    const accessToken = CreateAccessToken({ email });
+    const accessToken = CreateAccessToken({ email: result.email });
 
-    res.status(200).json({ name: result.name, email, accessToken, userId: result._id });
+    res.status(200).json({ name: result.name, email, accessToken, userId: result._id, role: result.role });
   } catch (error) {
     res.status(500).json(error);
   }
 };
-
-// authController.logout = async (req, res) => {
-//   try {
-//     const cookies = req?.signedCookies;
-//     const { email } = req.body;
-//     if (!cookies) return res.status(204);
-//     const refreshToken = cookies.jwt;
-
-//     //remove refreshToken from db
-//     // const filter = { email: email };
-//     // const query = { $pull: { log: refreshToken } };
-
-//     // const response = await userCollection.updateOne(filter, query);
-
-//     //remove cookie
-//     res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "none" });
-
-//     res.clearCookie("yoodaHostel");
-
-//     res.sendStatus(204);
-//   } catch (error) {
-//     res.status(500).json("Internal server error");
-//   }
-// };
-
-// authController.newAccessToken = async (req, res) => {
-//   try {
-//     const token = req?.signedCookies?.jwt;
-
-//     if (!token) return res.status(401).json("Authorization Failed");
-//     const validToken = await jwt.verify(token, process.env.REFRESHTOKEN);
-
-//     if (!validToken) return res.status(401).json("Authorization Failed");
-
-//     // const query = {log: { $elemMatch: {$eq: token} } };
-
-//     const findUser = await userCollection.findOne({ email: validToken.email });
-
-//     if (!findUser) return res.status(401).json("Authorization Failed");
-//     const roles = Object.values(findUser.roles);
-
-//     const userObj = {
-//       UserInfo: {
-//         email: findUser.email,
-//         roles,
-//       },
-//     };
-
-//     const accessToken = CreateAccessToken(userObj);
-
-//     res.json({ roles, accessToken });
-//   } catch (error) {
-//     res.json(error);
-//   }
-// };
 
 module.exports = authController;
