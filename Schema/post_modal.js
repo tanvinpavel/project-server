@@ -4,15 +4,15 @@ const postSchema = Schema({
   creator: {
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   image: {
     type: String,
-    trim: true
+    trim: true,
   },
   publicId: {
     type: String,
-    trim: true
+    trim: true,
   },
   price: {
     type: Number,
@@ -20,7 +20,7 @@ const postSchema = Schema({
   post: {
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   status: {
     type: String,
@@ -28,7 +28,11 @@ const postSchema = Schema({
   },
   private: {
     type: Boolean,
-    required: true
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 

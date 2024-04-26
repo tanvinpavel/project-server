@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const Post = require("../Schema/post_modal");
 const { uploadOnCloudinary, deleteFromCloudinary } = require("../Utility/cloudinary");
 const fs = require("fs");
@@ -62,6 +61,7 @@ postsController.getAllPost = async (req, res) => {
         },
       },
     },
+    { $sort: { date: -1 } },
   ]);
 
   if (!aggregation) {
@@ -74,7 +74,7 @@ postsController.getAllPost = async (req, res) => {
 };
 
 postsController.getAllPostByUserId = async (req, res) => {
-  const userId = req.userEmail;
+  const userId = req.params.id;
   console.log(userId);
   const aggregation = await Post.aggregate([
     {
@@ -97,6 +97,7 @@ postsController.getAllPostByUserId = async (req, res) => {
         },
       },
     },
+    { $sort: { date: -1 } },
   ]);
 
   if (!aggregation) {
@@ -149,7 +150,6 @@ postsController.fileUpload = async (req, res) => {
 
 postsController.confirmPurchase = async (req, res) => {
   try {
-    console.log("req?.body?.postId", req?.body?.postId);
     await Post.findOneAndUpdate({ _id: req?.body?.postId }, { status: "sold" }, { new: true });
 
     res.status(200).json({
