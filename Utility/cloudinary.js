@@ -12,7 +12,6 @@ cloudinary.config({
 const uploadOnCloudinary = async (localPath) => {
   try {
     if (localPath) {
-      console.log(localPath);
       const result = await cloudinary.uploader.upload(localPath, { resource_type: "image" });
 
       return result;
@@ -20,7 +19,6 @@ const uploadOnCloudinary = async (localPath) => {
       return null;
     }
   } catch (error) {
-    console.log(error);
     fs.unlinkSync(localPath);
     return null;
   }
