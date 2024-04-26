@@ -12,6 +12,8 @@ route.get("/getProfile", accessValidation, userController.getProfile);
 
 route.get("/getAllUsers", accessValidation, verifyRoles(Admin), userController.getAllUsersList);
 
+route.delete("/delete/:id", accessValidation, verifyRoles(Admin), userController.deleteUserById);
+
 route.post("/updateProfile", accessValidation, userController.updateUserProfile);
 
 module.exports = route;

@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const User = require("../Schema/user_modal");
+const Registration = require("../Schema/registration_modal");
 
 //moduleScaffolding
 const usersController = {};
@@ -18,12 +19,10 @@ usersController.getProfile = async (req, res) => {
 
 usersController.getAllUsersList = async (req, res) => {
   try {
-    console.log(req.userEmail);
     const userList = await User.find({ email: { $ne: req.userEmail } });
 
     res.status(200).json(userList);
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       error: "data fetch failed",
     });
@@ -42,6 +41,24 @@ usersController.updateUserProfile = async (req, res) => {
   } catch (e) {
     res.status(500).json({
       error: "Profile update failed",
+    });
+  }
+};
+
+usersController.deleteUserById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+
+    const result = await User.findByIdAndDelete(_id);
+
+    await Registration.deleteOne({ email: result.email });
+
+    res.status(200).json({
+      message: "User delete successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
     });
   }
 };
