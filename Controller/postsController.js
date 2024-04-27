@@ -52,22 +52,21 @@ postsController.getAllPost = async (req, res) => {
   const aggregation = await Post.aggregate([
     {
       $match: {
-        creator: userId,
+        creator: { $ne: userId },
       },
     },
     {
       $lookup: {
         from: "users",
-        localField: "email",
-        foreignField: "creator",
+        localField: "creator",
+        foreignField: "email",
         as: "userDetails",
       },
     },
+    { $unwind: "$userDetails" },
     {
       $addFields: {
-        userDetails: {
-          $arrayElemAt: ["$userDetails", 0],
-        },
+        userDetails: "$userDetails",
       },
     },
     { $sort: { date: -1 } },
