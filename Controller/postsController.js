@@ -27,7 +27,9 @@ postsController.createPost = async (req, res) => {
 
       await createPost.save();
       //remove local file after upload to cloudinary
-      fs.unlinkSync(localFilePath);
+      if(localFilePath !== './public/temp/default.jpg') {
+        fs.unlinkSync(localFilePath);
+      }
 
       res.status(200).json({
         message: "Post create successfully",
@@ -136,7 +138,9 @@ postsController.fileUpload = async (req, res) => {
   const localFilePath = req?.file?.path;
   const result = await uploadOnCloudinary(localFilePath);
   if (result) {
-    fs.unlinkSync(localFilePath);
+    if(localFilePath !== "./public/temp/default.jpg") {
+      fs.unlinkSync(localFilePath);
+    }
 
     res.status(200).json({
       message: "File upload successfully",
