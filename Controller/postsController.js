@@ -27,7 +27,7 @@ postsController.createPost = async (req, res) => {
 
       await createPost.save();
       //remove local file after upload to cloudinary
-      if(localFilePath !== './public/temp/default.jpg') {
+      if (localFilePath !== "./public/temp/default.jpg") {
         fs.unlinkSync(localFilePath);
       }
 
@@ -47,12 +47,19 @@ postsController.createPost = async (req, res) => {
 };
 
 postsController.getAllPost = async (req, res) => {
+  const userId = req.userEmail;
+  console.log(userId);
   const aggregation = await Post.aggregate([
+    {
+      $match: {
+        creator: userId,
+      },
+    },
     {
       $lookup: {
         from: "users",
-        localField: "creator",
-        foreignField: "email",
+        localField: "email",
+        foreignField: "creator",
         as: "userDetails",
       },
     },
@@ -87,8 +94,8 @@ postsController.getAllPostByUserId = async (req, res) => {
     {
       $lookup: {
         from: "users",
-        localField: "creator",
-        foreignField: "email",
+        localField: "email",
+        foreignField: "creator",
         as: "userDetails",
       },
     },
@@ -138,7 +145,7 @@ postsController.fileUpload = async (req, res) => {
   const localFilePath = req?.file?.path;
   const result = await uploadOnCloudinary(localFilePath);
   if (result) {
-    if(localFilePath !== "./public/temp/default.jpg") {
+    if (localFilePath !== "./public/temp/default.jpg") {
       fs.unlinkSync(localFilePath);
     }
 
