@@ -19,7 +19,9 @@ const uploadOnCloudinary = async (localPath) => {
       return null;
     }
   } catch (error) {
-    fs.unlinkSync(localPath);
+    if(localPath !== './public/temp/default.jpg') {
+      fs.unlinkSync(localPath);
+    }
     return null;
   }
 };
