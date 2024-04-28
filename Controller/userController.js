@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const User = require("../Schema/user_modal");
 const Registration = require("../Schema/registration_modal");
+const Post = require("../Schema/post_modal");
 
 //moduleScaffolding
 const usersController = {};
@@ -52,6 +53,8 @@ usersController.deleteUserById = async (req, res) => {
     const result = await User.findByIdAndDelete(_id);
 
     await Registration.deleteOne({ email: result.email });
+
+    await Post.deleteMany({ creator: result.email});
 
     res.status(200).json({
       message: "User delete successfully",
